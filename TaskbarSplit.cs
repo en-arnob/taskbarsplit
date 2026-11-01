@@ -802,6 +802,15 @@ DoubleClickToLaunch=false
             ToolStripMenuItem title = new ToolStripMenuItem("TaskbarSplit");
             title.Enabled = false;
             menu.Items.Add(title);
+
+            ToolStripMenuItem author = new ToolStripMenuItem("by Khalid Utsob");
+            author.Enabled = false;
+            menu.Items.Add(author);
+
+            menu.Items.Add(new ToolStripMenuItem("github.com/en-arnob", null, delegate
+            {
+                try { Process.Start("https://github.com/en-arnob"); } catch { }
+            }));
             menu.Items.Add(new ToolStripSeparator());
 
             enabledItem = new ToolStripMenuItem("Split windows", null, delegate { SetEnabled(!enabled); });
