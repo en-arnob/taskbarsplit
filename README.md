@@ -23,6 +23,9 @@ Run `build.cmd`. It uses the C# compiler that ships with Windows, so nothing els
 Run `TaskbarSplit.exe`. Right-click its tray icon for these options:
 
 - **Split windows** pauses or resumes splitting. Double-clicking the tray icon does the same.
+- **Double-click to open pinned apps** makes a pinned app that is not running need a
+  double-click to launch. One click on it does nothing. Running apps still switch with one click.
+  You can still drag pinned icons to reorder them, and Shift, Ctrl or Alt clicks work as usual.
 - **Start with Windows** adds or removes a Run entry for your user account.
 - **Edit settings** opens `TaskbarSplit.ini`. Use **Reload settings** after you save it.
 - **Exit** restores normal grouping and quits.
@@ -39,7 +42,20 @@ TaskbarSplit.exe --exit
 | --- | --- |
 | `Mode` | `all` splits every app except `Exclude`. `include` splits only the apps in `Include`. |
 | `Include` / `Exclude` | Comma-separated exe names, for example `Code.exe, chrome.exe`. |
+| `DoubleClickToLaunch` | `true` requires a double-click to launch pinned apps that are not running. The tray menu item changes this value. |
 | `KeepFirstOnPin` | `true` keeps the first window on the pinned icon. `false` splits every window off, so the pinned icon stays a plain launcher. |
+
+## Double-click option: how it works
+
+A low-level mouse hook watches left clicks. No code is injected into Explorer. A background
+thread reads the taskbar buttons through UI Automation whenever the pointer is over the taskbar.
+It records where the pinned-but-not-running buttons are. A button counts as running when its
+name carries a window count, such as "Code - 2 running windows". The hook swallows a single
+click on those buttons and lets the second click of a double-click through. UI Automation is
+only loaded while the option is on.
+
+For troubleshooting, set the environment variable `TASKBARSPLIT_DEBUG=1` before starting the tool.
+It then writes a log to `%TEMP%\TaskbarSplit.log`.
 
 ## Limits
 
